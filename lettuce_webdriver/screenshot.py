@@ -21,7 +21,6 @@ def set_save_directory(base, source):
 
     world.screenshot_root = root
 
-
 def resolution_path(world):
     window_size = world.browser.get_window_size()
     return os.path.join(
@@ -53,12 +52,15 @@ def capture_screenshot_delay(step, delay):
 
 @after.each_feature
 def record_run_feature_report(feature):
+    window_size = world.browser.get_window_size()
     if getattr(feature, 'dir_path', None) is None:
         return
     feature_name_json = '{}.json'.format(os.path.splitext(
         os.path.basename(feature.described_at.file)
     )[0])
     report = {}
+    report['img_width'] = window_size['width']
+    report['img_height'] = window_size['height']
     for scenario in feature.scenarios:
         scenario_report = []
         for step in scenario.steps:
